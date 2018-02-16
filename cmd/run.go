@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"github.com/pkg/errors"
+	projectClient "github.com/rancher/types/client/project/v3"
 	"github.com/urfave/cli"
 )
 
@@ -62,6 +64,10 @@ func RunCommand() cli.Command {
 		Usage:  "Run services",
 		Action: serviceRun,
 		Flags: []cli.Flag{
+			cli.StringFlag{
+				Name:  "namespace",
+				Usage: "Namespace to deploy into",
+			},
 			cli.Int64Flag{
 				Name:  "blkio-weight",
 				Usage: "Block IO (relative weight), between 10 and 1000, or 0 to disable (default 0)",
@@ -265,5 +271,20 @@ func RunCommand() cli.Command {
 }
 
 func serviceRun(ctx *cli.Context) error {
+	if ctx.String("namespace") == "" {
+		return errors.New("namespace is required")
+	}
+	c, err := GetClient(ctx)
+	if err != nil {
+		return err
+	}
+
+	workload := projectClient.Workload{
+		NamespaceId: ctx.String("namespace"),
+	}
+	_, err = c.ProjectClient.Workload.Create(&workload)
+	if nil != err {
+		return err
+	}
 	return nil
 }
