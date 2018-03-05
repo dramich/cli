@@ -280,7 +280,13 @@ func serviceRun(ctx *cli.Context) error {
 	}
 
 	workload := projectClient.Workload{
+		Name:        ctx.Args().First(),
 		NamespaceId: ctx.String("namespace"),
+		Containers: []projectClient.Container{
+			{
+				AllowPrivilegeEscalation: false,
+			},
+		},
 	}
 	_, err = c.ProjectClient.Workload.Create(&workload)
 	if nil != err {
