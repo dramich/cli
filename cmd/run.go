@@ -372,7 +372,7 @@ func parseStringPortMapping(s string) ([]*int64, error) {
 }
 
 func processResources(ctx *cli.Context) *projectClient.Resources {
-	var resources *projectClient.Resources
+	resources := &projectClient.Resources{}
 	if ctx.String("cpu") != "" || ctx.String("cpu-reserve") != "" {
 		resources.CPU = &projectClient.ResourceRequest{
 			Limit:   ctx.String("cpu"),
