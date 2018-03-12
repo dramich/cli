@@ -247,3 +247,29 @@ func getClusterName(cluster *managementClient.Cluster) string {
 	}
 	return cluster.ID
 }
+
+func boolPointer(b bool) *bool {
+	f := b
+	return &f
+}
+
+func int64Pointer(i int64) *int64 {
+	p := i
+	return &p
+}
+
+func KeyValuetoMap(items []string) map[string]string {
+	newMap := make(map[string]string)
+	for _, value := range items {
+		splitValue := strings.Split(value, "=")
+		if len(splitValue) != 2 {
+			continue
+		}
+		newMap[splitValue[0]] = splitValue[1]
+	}
+	return newMap
+}
+
+func SplitStringOnSpace(s string) []string {
+	return strings.Split(s, " ")
+}
